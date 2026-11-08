@@ -24,7 +24,8 @@ PROVIDERS = {
 }
 VOICE_URL = "https://openai.com/chatgpt-voice.json"
 CLAUDE_URL = "https://platform.claude.com/docs/en/api/ip-addresses"
-COMMIT_URL = "https://api.github.com/repos/v2fly/domain-list-community/commits/master"
+# 只查询分支 SHA；提交详情接口可能为大型更新计算大量文件差异。
+REVISION_URL = "https://api.github.com/repos/v2fly/domain-list-community/git/ref/heads/master"
 # 防止整个共享平台被分流；这不是完整的公共后缀或域名归属数据库。
 SHARED_ROOTS = {
     "com", "net", "org", "ai", "dev", "app", "io", "google", "cloud",
@@ -190,7 +191,7 @@ def check_removals(previous, current):
 
 
 def build():
-    revision = json.loads(fetch(COMMIT_URL))["sha"]
+    revision = json.loads(fetch(REVISION_URL))["object"]["sha"]
     if not re.fullmatch(r"[0-9a-f]{40}", revision):
         raise ValueError("Invalid upstream commit SHA")
     categories, files, skipped = load_domains(revision)

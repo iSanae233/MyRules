@@ -60,7 +60,8 @@ def collect():
         branch = settings["branch"]
         if not re.fullmatch(r"[A-Za-z0-9_.-]+", branch):
             raise ValueError(f"Invalid branch: {branch}")
-        revision = json.loads(fetch(f"https://api.github.com/repos/{repo}/commits/{branch}"))["sha"]
+        # Git ref 接口只返回分支指针，避免下载大型提交的文件差异。
+        revision = json.loads(fetch(f"https://api.github.com/repos/{repo}/git/ref/heads/{branch}"))["object"]["sha"]
         if not re.fullmatch(r"[0-9a-f]{40}", revision):
             raise ValueError("Invalid upstream revision")
         records[repo] = {"revision": revision, "license": settings["license"], "files": {}}
