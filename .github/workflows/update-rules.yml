@@ -35,7 +35,7 @@ jobs:
         # Only generated outputs are staged. A failed download or parser never
         # reaches this step, so the last published subscription remains available.
         run: |
-          git add -- Rules/AI_Models.list sources.lock.json
+          git add -- Rules/AI/AI.list sources.lock.json
           if git diff --cached --quiet; then
             echo "Sources checked; no changes." >> "$GITHUB_STEP_SUMMARY"
             exit 0
@@ -45,4 +45,4 @@ jobs:
           git commit -m 'chore: update AI model rules'
           # No force push: a concurrent human push must cause a safe failure.
           git push origin HEAD:main
-          echo "Updated Rules/AI_Models.list and source provenance." >> "$GITHUB_STEP_SUMMARY"
+          echo "Updated Rules/AI/AI.list and source provenance." >> "$GITHUB_STEP_SUMMARY"

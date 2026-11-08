@@ -1,0 +1,29 @@
+# AI
+
+`AI.list` 是海外 AI 服务的 Loon 分流规则，覆盖 ChatGPT / OpenAI、Gemini / Google AI、Claude / Anthropic、Grok、Perplexity、Groq 和 GitHub Copilot。
+
+规则每天北京时间 **04:00** 通过 GitHub Actions 检查更新。域名同步自社区数据源；IP 仅纳入官方公布的 ChatGPT Voice 和 Claude API 入站地址，不包含整个共享云平台网段。
+
+## 订阅链接
+
+**GitHub Raw：**
+
+```text
+https://raw.githubusercontent.com/iSanae233/MyLoonRules/main/Rules/AI/AI.list
+```
+
+**jsDelivr CDN：**
+
+```text
+https://cdn.jsdelivr.net/gh/iSanae233/MyLoonRules@main/Rules/AI/AI.list
+```
+
+选择一个地址订阅即可。jsDelivr 有 CDN 缓存，内容可能晚于 GitHub Raw 更新。
+
+## 数据来源
+
+- 域名：[v2fly/domain-list-community](https://github.com/v2fly/domain-list-community)。
+- ChatGPT Voice IP：[OpenAI 官方 JSON](https://openai.com/chatgpt-voice.json)。
+- Claude API 入站 IP：[Anthropic 官方文档](https://platform.claude.com/docs/en/api/ip-addresses)。
+
+完整来源记录和跳过的条目见 [sources.lock.json](../../sources.lock.json)，维护方法见 [maintain.md](../../maintain.md)。规则由脚本生成，请勿直接编辑 `AI.list`。
