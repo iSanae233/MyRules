@@ -1,3 +1,6 @@
 __pycache__/
 *.py[cod]
 *.tmp
+# 本地校验代码不纳入仓库。
+/tests/
+/test_*.py

@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-"""Generate a Loon subscription from versioned domain data and official IP feeds.
-
-Only Python's standard library is needed. Remote content is parsed as data, never
-executed. All sources must pass validation before either tracked output is written.
-"""
+"""从社区域名数据和官方 IP 来源生成 Rules/AI_Models.list，仅使用标准库。"""
 
 import argparse
 import hashlib
@@ -29,8 +25,7 @@ PROVIDERS = {
 VOICE_URL = "https://openai.com/chatgpt-voice.json"
 CLAUDE_URL = "https://platform.claude.com/docs/en/api/ip-addresses"
 COMMIT_URL = "https://api.github.com/repos/v2fly/domain-list-community/commits/master"
-# Entire shared platforms would route unrelated apps. Add narrowly scoped hosts
-# instead; this is a guardrail, not a complete public suffix or ownership database.
+# 防止整个共享平台被分流；这不是完整的公共后缀或域名归属数据库。
 SHARED_ROOTS = {
     "com", "net", "org", "ai", "dev", "app", "io", "google", "cloud",
     "google.com", "googleapis.com", "googleusercontent.com", "gstatic.com",
@@ -42,7 +37,7 @@ MAX_BYTES = 4 * 1024 * 1024
 
 
 def fetch(url):
-    """Bound downloads and retry transient network failures without credentials."""
+    """限制下载大小并重试网络错误；不向数据源发送凭据。"""
     for attempt in range(3):
         try:
             request = Request(url, headers={"User-Agent": "Mozilla/5.0 MyLoonRules/1.0"})
@@ -53,7 +48,7 @@ def fetch(url):
             if len(data) > MAX_BYTES:
                 raise ValueError(f"Source exceeds {MAX_BYTES} bytes: {url}")
             return data.decode("utf-8")
-        except (OSError, ValueError):
+        except OSError:
             if attempt == 2:
                 raise
             time.sleep(2 ** attempt)
@@ -80,8 +75,7 @@ def domain_rule(token):
 
 def cidr_rule(value):
     network = ipaddress.ip_network(value, strict=True)
-    # Official service feeds should never contain LAN, default-route or very
-    # broad cloud ranges. Check both endpoints, not just the network address.
+    # 同时检查网段两端，拒绝私网、默认路由和过宽的云平台网段。
     minimum = 16 if network.version == 4 else 32
     if (network.prefixlen < minimum or not network.network_address.is_global
             or not network.broadcast_address.is_global):
@@ -90,27 +84,24 @@ def cidr_rule(value):
     return f"{kind},{network},no-resolve"
 
 
-class DomainSource:
-    def __init__(self, revision, loader=fetch):
-        self.revision = revision
-        self.loader = loader
-        self.files = {}
-        self.skipped = []
+def load_domains(revision):
+    """展开同一上游版本的 include，返回规则、来源信息和跳过的条目。"""
+    contents, files, skipped = {}, {}, []
 
-    def load(self, name, stack=()):
-        # Includes are file identifiers, never arbitrary URLs or filesystem paths.
+    def load(name, stack=()):
+        # include 只能引用上游文件名，不能是 URL 或本地路径。
         if not re.fullmatch(r"[a-z0-9][a-z0-9_-]*", name):
             raise ValueError(f"Invalid include: {name}")
         if name in stack or len(stack) >= 10:
             raise ValueError(f"Recursive/deep include: {name}")
-        if len(self.files) >= 100 and name not in self.files:
+        if len(files) >= 100 and name not in files:
             raise ValueError("Too many included files")
-        url = f"https://raw.githubusercontent.com/v2fly/domain-list-community/{self.revision}/data/{name}"
-        if name not in self.files:
-            content = self.loader(url)
-            self.files[name] = {"url": url, "sha256": digest(content), "content": content}
+        if name not in contents:
+            url = f"https://raw.githubusercontent.com/v2fly/domain-list-community/{revision}/data/{name}"
+            contents[name] = fetch(url)
+            files[name] = {"url": url, "sha256": digest(contents[name])}
         rules = set()
-        for number, raw in enumerate(self.files[name]["content"].splitlines(), 1):
+        for number, raw in enumerate(contents[name].splitlines(), 1):
             fields = raw.split("#", 1)[0].split()
             if not fields:
                 continue
@@ -118,24 +109,25 @@ class DomainSource:
             if any(not x.startswith("@") for x in attributes):
                 raise ValueError(f"Unexpected syntax at {name}:{number}")
             if token.startswith("include:"):
-                # Attribute-filtered includes have different semantics; fail rather
-                # than silently importing the whole category or guessing a filter.
+                # 带属性的 include 需要过滤，不能直接导入整个类别。
                 if attributes:
                     raise ValueError(f"Filtered include needs review: {name}:{number}")
-                rules.update(self.load(token[8:], (*stack, name)))
+                rules.update(load(token[8:], (*stack, name)))
             elif token.startswith(("regexp:", "keyword:")) or attributes:
-                # Loon has no equivalent for every geosite expression. Telemetry
-                # and ads can also use shared hosts. Keep an audit trail of omissions.
-                self.skipped.append({"file": name, "line": number, "entry": raw.strip()})
+                # 不扩大正则匹配范围；广告/遥测可能使用共享域名，记录后跳过。
+                skipped.append({"file": name, "line": number, "entry": raw.strip()})
             else:
                 rules.add(domain_rule(token))
         if not rules or len(rules) > 2000:
             raise ValueError(f"Unexpected domain count for {name}: {len(rules)}")
         return rules
 
+    categories = {label: sorted(load(name)) for label, name in PROVIDERS.items()}
+    return categories, dict(sorted(files.items())), skipped
+
 
 class VisibleText(HTMLParser):
-    """Read document text without accidentally matching embedded JS/JSON copies."""
+    """提取页面正文，避免匹配脚本内嵌的重复文档。"""
     def __init__(self):
         super().__init__()
         self.hidden = 0
@@ -158,8 +150,7 @@ def claude_ranges(html):
     parser = VisibleText()
     parser.feed(html)
     text = "\n".join(parser.parts)
-    # Direction matters: outbound/MCP and phased-out addresses are NOT endpoints
-    # for a user's Claude requests. A changed heading must fail the update.
+    # 只取入站段，避免将 MCP 出口和退役 IP 当成客户端请求目标。
     section = re.search(r"Inbound IP addresses\s+(.*?)\s+Outbound IP addresses", text, re.S)
     if not section:
         raise ValueError("Claude inbound/outbound section boundaries not found")
@@ -174,7 +165,7 @@ def voice_ranges(content):
     prefixes = json.loads(content)["prefixes"]
     rules = set()
     for prefix in prefixes:
-        if len(prefix) != 1 or next(iter(prefix)) not in {"ipv4Prefix", "ipv6Prefix"}:
+        if set(prefix) not in ({"ipv4Prefix"}, {"ipv6Prefix"}):
             raise ValueError(f"Unexpected voice prefix format: {prefix!r}")
         key, value = next(iter(prefix.items()))
         if ipaddress.ip_network(value).version != (4 if key == "ipv4Prefix" else 6):
@@ -190,7 +181,7 @@ def digest(text):
 
 
 def check_removals(previous, current):
-    """Require maintainer review when over 25% of a category disappears."""
+    """任一类别超过 25% 的旧规则消失时，停止自动更新。"""
     for name, rules in previous.items():
         old = set(rules)
         removed = old - set(current.get(name, []))
@@ -202,25 +193,19 @@ def build():
     revision = json.loads(fetch(COMMIT_URL))["sha"]
     if not re.fullmatch(r"[0-9a-f]{40}", revision):
         raise ValueError("Invalid upstream commit SHA")
-    source = DomainSource(revision)
-    categories = {label: sorted(source.load(name)) for label, name in PROVIDERS.items()}
+    categories, files, skipped = load_domains(revision)
     ip_sources = []
     for label, url, parse in [
         ("ChatGPT Voice (official IPs)", VOICE_URL, voice_ranges),
         ("Claude API inbound (official IPs)", CLAUDE_URL, claude_ranges),
     ]:
-        content = fetch(url)
-        categories[label] = sorted(parse(content))
-        # For HTML, hash the extracted rules: cosmetic site changes should not
-        # create commits. Domain files retain their exact input hashes below.
+        categories[label] = sorted(parse(fetch(url)))
+        # IP 来源只记录规则哈希，忽略文档页面的样式等变化。
         ip_sources.append({"name": label, "url": url,
                            "rules_sha256": digest("\n".join(categories[label]))})
-    manifest = {"domain_source": "v2fly/domain-list-community", "revision": revision,
-                "files": {name: {k: v for k, v in record.items() if k != "content"}
-                          for name, record in sorted(source.files.items())},
-                "ip_sources": ip_sources, "skipped": source.skipped,
-                "categories": categories}
-    return categories, manifest
+    return {"domain_source": "v2fly/domain-list-community", "revision": revision,
+            "files": files, "ip_sources": ip_sources, "skipped": skipped,
+            "categories": categories}
 
 
 def render(categories):
@@ -231,10 +216,8 @@ def render(categories):
     seen = set()
     for name, rules in categories.items():
         lines.append(f"# {name}")
-        for rule in sorted(rules):
-            if rule not in seen:
-                lines.append(rule)
-                seen.add(rule)
+        lines.extend(sorted(set(rules) - seen))
+        seen.update(rules)
         lines.append("")
     return "\n".join(lines)
 
@@ -244,15 +227,16 @@ def main():
     parser.add_argument("--accept-removals", action="store_true",
                         help="Bypass removal guard after manually reviewing upstream changes")
     args = parser.parse_args()
-    categories, manifest = build()
+    manifest = build()
+    categories = manifest["categories"]
     lock_path = ROOT / "sources.lock.json"
     if lock_path.exists() and not args.accept_removals:
-        check_removals(json.loads(lock_path.read_text())["categories"], categories)
-    # Stage both complete outputs before replacing either file. GitHub only
-    # commits if this process succeeds; failures leave the published list intact.
-    outputs = {ROOT / "AI_Models.list": render(categories),
+        check_removals(json.loads(lock_path.read_text(encoding="utf-8"))["categories"], categories)
+    # 全部数据通过校验后才写入。Actions 仅在脚本成功时提交发布。
+    outputs = {ROOT / "Rules" / "AI_Models.list": render(categories),
                lock_path: json.dumps(manifest, ensure_ascii=False, indent=2) + "\n"}
     for path, text in outputs.items():
+        path.parent.mkdir(parents=True, exist_ok=True)
         path.with_suffix(path.suffix + ".tmp").write_text(text, encoding="utf-8")
     for path in outputs:
         path.with_suffix(path.suffix + ".tmp").replace(path)
