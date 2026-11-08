@@ -48,9 +48,9 @@ def fetch(url):
             if len(data) > MAX_BYTES:
                 raise ValueError(f"Source exceeds {MAX_BYTES} bytes: {url}")
             return data.decode("utf-8")
-        except OSError:
+        except OSError as error:
             if attempt == 2:
-                raise
+                raise OSError(f"Unable to fetch {url}: {error}") from error
             time.sleep(2 ** attempt)
 
 
