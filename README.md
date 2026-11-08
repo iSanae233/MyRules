@@ -9,7 +9,10 @@
 | 规则 | 说明 | GitHub Raw | jsDelivr |
 | --- | --- | --- | --- |
 | [AI](Rules/AI/AI.list) | 海外 AI 模型与相关服务 | [订阅](https://raw.githubusercontent.com/iSanae233/MyRules/main/Rules/AI/AI.list) | [订阅](https://cdn.jsdelivr.net/gh/iSanae233/MyRules@main/Rules/AI/AI.list) |
+| [Claude](Rules/Claude/Claude.list) | Claude / Anthropic 域名和官方 API 入站 IP | [订阅](https://raw.githubusercontent.com/iSanae233/MyRules/main/Rules/Claude/Claude.list) | [订阅](https://cdn.jsdelivr.net/gh/iSanae233/MyRules@main/Rules/Claude/Claude.list) |
 | [Apple](Rules/Apple/Apple.list) | Apple 域名、关键字、User-Agent 和 IP 规则 | [订阅](https://raw.githubusercontent.com/iSanae233/MyRules/main/Rules/Apple/Apple.list) | [订阅](https://cdn.jsdelivr.net/gh/iSanae233/MyRules@main/Rules/Apple/Apple.list) |
+
+Claude 也包含在 AI 规则中。若希望 Claude 使用单独策略，请将 Claude 订阅放在 AI 订阅之前，并在 Loon 中为 Claude 选择 `SG` 策略。IP 规则使用 `no-resolve`，仅匹配目标已经是 IP 的连接；更高优先级的本地或插件规则也可能影响结果。
 
 ## 自动更新
 

@@ -19,7 +19,7 @@ git diff -- Rules/ sources.lock.json rules.lock.json
 | `rules.lock.json` | Apple 上游 commit、文件 URL、输入哈希和规则数量 |
 | `.github/workflows/update-rules.yml` | 定时/手动获取并提交更新 |
 
-**添加 AI 服务商：** 在 `scripts/update_rules.py` 的 `PROVIDERS` 中增加显示名称和上游 `data/` 文件名，确认来源确实属于目标服务，再运行生成脚本、检查差异，最后提交。若需要新增 AI 服务 IP，必须先找到官方明确发布的客户端连接目标地址源，并校验解析结果；不能根据爬虫/出口 IP 推断。
+**添加 AI 服务商：** 在 `scripts/update_rules.py` 的 `PROVIDERS` 中增加显示名称和上游 `data/` 文件名，确认来源确实属于目标服务，再运行生成脚本、检查差异，最后提交。若需要新增 AI 服务 IP，必须先找到官方明确发布的客户端连接目标地址源，并校验解析结果；不能根据爬虫/出口 IP 推断。Claude 独立列表从同一次生成的 Anthropic 域名和 Claude API 入站 IP 提取，AI 列表仍保留这些条目；需在 Loon 中将 Claude 订阅置于 AI 订阅之前并选择所需策略。
 
 **添加其他上游分类：** 修改 `rule_sources.json`，注明仓库、分支、许可和文件路径，然后运行 `scripts/sync_rules.py`。同一仓库的文件从同一个不可变 commit 下载。`_Domain.list` 文件中前导点域名转换为 `DOMAIN-SUFFIX`，无前导点域名转换为 `DOMAIN`。Apple 合并域名版和补充版，不丢弃其中任何一份。
 
@@ -43,8 +43,10 @@ IP 规则带 `no-resolve`，遵循 [Loon IP 规则文档](https://nsloon.app/doc
 
 ```text
 Rules/
-└── AI/
+├── AI/
     └── AI.list
+├── Claude/
+    └── Claude.list
 └── Apple/
     └── Apple.list
 ```
