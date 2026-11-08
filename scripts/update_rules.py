@@ -40,7 +40,7 @@ def fetch(url):
     """限制下载大小并重试网络错误；不向数据源发送凭据。"""
     for attempt in range(3):
         try:
-            request = Request(url, headers={"User-Agent": "Mozilla/5.0 MyLoonRules/1.0"})
+            request = Request(url, headers={"User-Agent": "Mozilla/5.0 MyRules/1.0"})
             with urlopen(request, timeout=30) as response:
                 if not response.url.startswith("https://"):
                     raise ValueError("Source redirected away from HTTPS")

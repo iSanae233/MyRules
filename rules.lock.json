@@ -1,0 +1,86 @@
+{
+  "repositories": {
+    "blackmatrix7/ios_rule_script": {
+      "revision": "0b6897dc17e0c513d25449c935a9694818e32f0c",
+      "license": "GPL-2.0",
+      "files": {
+        "rule/Loon/Apple/Apple_Domain.list": {
+          "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/0b6897dc17e0c513d25449c935a9694818e32f0c/rule/Loon/Apple/Apple_Domain.list",
+          "sha256": "b2686f63cab575aa3c408277efa15fe45c726a847f53cbcf7285f1d82bf8fc9c"
+        },
+        "rule/Loon/Apple/Apple.list": {
+          "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/0b6897dc17e0c513d25449c935a9694818e32f0c/rule/Loon/Apple/Apple.list",
+          "sha256": "debc1c44214ca640c4f426fd27e735349e3a87ebce2810ae9a04fba7017d5f2b"
+        },
+        "rule/Loon/BiliBili/BiliBili.list": {
+          "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/0b6897dc17e0c513d25449c935a9694818e32f0c/rule/Loon/BiliBili/BiliBili.list",
+          "sha256": "9b22a7bdf97792346bf480771841b6cd1097ec7ad034b34528c14f3798107854"
+        },
+        "rule/Loon/Crypto/Crypto.list": {
+          "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/0b6897dc17e0c513d25449c935a9694818e32f0c/rule/Loon/Crypto/Crypto.list",
+          "sha256": "4fe49a0fd839fe32a88640ee891197bfd926faf70c2ea1c812383d02f16184e7"
+        },
+        "rule/Loon/YouTube/YouTube.list": {
+          "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/0b6897dc17e0c513d25449c935a9694818e32f0c/rule/Loon/YouTube/YouTube.list",
+          "sha256": "aba3aab10f9acdaa9c3120b808acd94674fa89e31079aeb299438a4ad690158b"
+        },
+        "rule/Loon/Google/Google.list": {
+          "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/0b6897dc17e0c513d25449c935a9694818e32f0c/rule/Loon/Google/Google.list",
+          "sha256": "8ad1014c13d43d907bf4b22095e2b74e8f5488abfc4ef5b6f4a9a4331897fd6a"
+        },
+        "rule/Loon/Microsoft/Microsoft.list": {
+          "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/0b6897dc17e0c513d25449c935a9694818e32f0c/rule/Loon/Microsoft/Microsoft.list",
+          "sha256": "22df1a1017ad5d41755bf020ca8eb9afeedc7bdc2c649ed2074b255227a7ed8e"
+        },
+        "rule/Loon/Protonmail/Protonmail.list": {
+          "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/0b6897dc17e0c513d25449c935a9694818e32f0c/rule/Loon/Protonmail/Protonmail.list",
+          "sha256": "77b95cce917009ad887266d2d30226c8ce55282f90db1b2fc65ce20cc8a283d4"
+        },
+        "rule/Loon/Twitter/Twitter.list": {
+          "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/0b6897dc17e0c513d25449c935a9694818e32f0c/rule/Loon/Twitter/Twitter.list",
+          "sha256": "64c836f2431ca0d4728cc545bb74280ee50c886e346040012e6cdd2f3eee3f97"
+        },
+        "rule/Loon/Telegram/Telegram.list": {
+          "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/0b6897dc17e0c513d25449c935a9694818e32f0c/rule/Loon/Telegram/Telegram.list",
+          "sha256": "f4b423def4d7e47e99f668e76594ec670b552888b9e1ad23a7adbc65e7400887"
+        },
+        "rule/Loon/China/China_Domain.list": {
+          "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/0b6897dc17e0c513d25449c935a9694818e32f0c/rule/Loon/China/China_Domain.list",
+          "sha256": "28817e4a59359c6e6c264b6ed7d05dfc376548afb0aab50dbec5f60eb79e413f"
+        },
+        "rule/Loon/China/China.list": {
+          "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/0b6897dc17e0c513d25449c935a9694818e32f0c/rule/Loon/China/China.list",
+          "sha256": "f47b46695d6c4cb6d4c0a878ae00bb4842dd7f60c180ac1023e476bab1426f31"
+        },
+        "rule/Loon/Global/Global_Domain.list": {
+          "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/0b6897dc17e0c513d25449c935a9694818e32f0c/rule/Loon/Global/Global_Domain.list",
+          "sha256": "4a90b3128edddd44a1c31ba2a8bb91d84ce7e6655f02186a3ea5f7df8f300434"
+        }
+      }
+    },
+    "limbopro/Adblock4limbo": {
+      "revision": "b9642c46e6d41c851ca0ae47c8629b664dd7f74a",
+      "license": "MIT",
+      "files": {
+        "Adblock4limbo.list": {
+          "url": "https://raw.githubusercontent.com/limbopro/Adblock4limbo/b9642c46e6d41c851ca0ae47c8629b664dd7f74a/Adblock4limbo.list",
+          "sha256": "5fec42de94e30ae0a27ae0528e7c3f88bac57ffab4f0d31f99ee73a299f54909"
+        }
+      }
+    }
+  },
+  "counts": {
+    "Apple": 1602,
+    "Bilibili": 127,
+    "Crypto": 201,
+    "YouTube": 190,
+    "Google": 698,
+    "Microsoft": 671,
+    "Proton": 5,
+    "Twitter": 33,
+    "Telegram": 40,
+    "China": 3752,
+    "Global": 35122,
+    "Adblock": 526
+  }
+}

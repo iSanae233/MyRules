@@ -1,0 +1,26 @@
+{
+  "blackmatrix7/ios_rule_script": {
+    "branch": "master",
+    "license": "GPL-2.0",
+    "rules": {
+      "Apple": ["rule/Loon/Apple/Apple_Domain.list", "rule/Loon/Apple/Apple.list"],
+      "Bilibili": ["rule/Loon/BiliBili/BiliBili.list"],
+      "Crypto": ["rule/Loon/Crypto/Crypto.list"],
+      "YouTube": ["rule/Loon/YouTube/YouTube.list"],
+      "Google": ["rule/Loon/Google/Google.list"],
+      "Microsoft": ["rule/Loon/Microsoft/Microsoft.list"],
+      "Proton": ["rule/Loon/Protonmail/Protonmail.list"],
+      "Twitter": ["rule/Loon/Twitter/Twitter.list"],
+      "Telegram": ["rule/Loon/Telegram/Telegram.list"],
+      "China": ["rule/Loon/China/China_Domain.list", "rule/Loon/China/China.list"],
+      "Global": ["rule/Loon/Global/Global_Domain.list"]
+    }
+  },
+  "limbopro/Adblock4limbo": {
+    "branch": "main",
+    "license": "MIT",
+    "rules": {
+      "Adblock": ["Adblock4limbo.list"]
+    }
+  }
+}

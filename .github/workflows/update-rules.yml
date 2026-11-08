@@ -1,4 +1,4 @@
-name: Update AI rules
+name: Update rules
 
 on:
   schedule:
@@ -12,7 +12,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: update-ai-rules
+  group: update-rules
   cancel-in-progress: false
 
 jobs:
@@ -30,19 +30,21 @@ jobs:
         with:
           python-version: '3.12'
       - name: Fetch and generate rules
-        run: python scripts/update_rules.py
+        run: |
+          python scripts/update_rules.py
+          python scripts/sync_rules.py
       - name: Commit changed rules
         # Only generated outputs are staged. A failed download or parser never
         # reaches this step, so the last published subscription remains available.
         run: |
-          git add -- Rules/AI/AI.list sources.lock.json
+          git add -- Rules/*/*.list sources.lock.json rules.lock.json
           if git diff --cached --quiet; then
             echo "Sources checked; no changes." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'chore: update AI model rules'
+          git commit -m 'chore: update rules'
           # No force push: a concurrent human push must cause a safe failure.
           git push origin HEAD:main
-          echo "Updated Rules/AI/AI.list and source provenance." >> "$GITHUB_STEP_SUMMARY"
+          echo "Updated rule lists and source provenance." >> "$GITHUB_STEP_SUMMARY"
