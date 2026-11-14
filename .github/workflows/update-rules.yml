@@ -30,6 +30,8 @@ jobs:
         with:
           python-version: '3.12'
       - name: Fetch and generate rules
+        env:
+          MYRULES_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python scripts/update_rules.py
           python scripts/sync_rules.py

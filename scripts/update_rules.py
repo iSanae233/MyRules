@@ -6,11 +6,14 @@ import hashlib
 from html.parser import HTMLParser
 import ipaddress
 import json
+import os
 from pathlib import Path
 import re
 import sys
 import time
-from urllib.request import Request, urlopen
+from urllib.error import HTTPError
+from urllib.parse import urlsplit
+from urllib.request import HTTPRedirectHandler, Request, build_opener, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
 PROVIDERS = {
@@ -37,12 +40,25 @@ SHARED_ROOTS = {
 MAX_BYTES = 4 * 1024 * 1024
 
 
+class NoRedirect(HTTPRedirectHandler):
+    """携带令牌的请求不跟随重定向，防止凭据被转发。"""
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
 def fetch(url):
-    """限制下载大小并重试网络错误；不向数据源发送凭据。"""
+    """限制下载大小，仅对 GitHub API 使用工作流提供的令牌。"""
     for attempt in range(3):
         try:
-            request = Request(url, headers={"User-Agent": "Mozilla/5.0 MyRules/1.0"})
-            with urlopen(request, timeout=30) as response:
+            headers = {"User-Agent": "Mozilla/5.0 MyRules/1.0"}
+            parsed = urlsplit(url)
+            token = os.environ.get("MYRULES_GITHUB_TOKEN")
+            authenticated = bool(token and parsed.scheme == "https" and parsed.netloc == "api.github.com")
+            if authenticated:
+                headers["Authorization"] = f"Bearer {token}"
+            request = Request(url, headers=headers)
+            opener = build_opener(NoRedirect()).open if authenticated else urlopen
+            with opener(request, timeout=30) as response:
                 if not response.url.startswith("https://"):
                     raise ValueError("Source redirected away from HTTPS")
                 data = response.read(MAX_BYTES + 1)
@@ -50,7 +66,7 @@ def fetch(url):
                 raise ValueError(f"Source exceeds {MAX_BYTES} bytes: {url}")
             return data.decode("utf-8")
         except OSError as error:
-            if attempt == 2:
+            if attempt == 2 or (isinstance(error, HTTPError) and error.code in (403, 429)):
                 raise OSError(f"Unable to fetch {url}: {error}") from error
             time.sleep(2 ** attempt)
 
