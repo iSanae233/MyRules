@@ -1,37 +1,37 @@
 {
   "domain_source": "v2fly/domain-list-community",
-  "revision": "777d056afe68b2643c1ef15f80e7bde3dfa149b1",
+  "revision": "cc8b8a5ec9cd60abeefa1da403335db176458c99",
   "files": {
     "anthropic": {
-      "url": "https://raw.githubusercontent.com/v2fly/domain-list-community/777d056afe68b2643c1ef15f80e7bde3dfa149b1/data/anthropic",
+      "url": "https://raw.githubusercontent.com/v2fly/domain-list-community/cc8b8a5ec9cd60abeefa1da403335db176458c99/data/anthropic",
       "sha256": "59ad6a25a6d9759995777fe98f2cf30675199fad00546a0ffe027b95ec0776f0"
     },
     "github-copilot": {
-      "url": "https://raw.githubusercontent.com/v2fly/domain-list-community/777d056afe68b2643c1ef15f80e7bde3dfa149b1/data/github-copilot",
+      "url": "https://raw.githubusercontent.com/v2fly/domain-list-community/cc8b8a5ec9cd60abeefa1da403335db176458c99/data/github-copilot",
       "sha256": "bd8f1a7a846f1111710c31b13b45262f35220a00e8dfaf4c5830dc618ec51748"
     },
     "google-deepmind": {
-      "url": "https://raw.githubusercontent.com/v2fly/domain-list-community/777d056afe68b2643c1ef15f80e7bde3dfa149b1/data/google-deepmind",
+      "url": "https://raw.githubusercontent.com/v2fly/domain-list-community/cc8b8a5ec9cd60abeefa1da403335db176458c99/data/google-deepmind",
       "sha256": "6f768291aa81a8d88fa48fc20613f55be646674cfa24a3b3c152a97e859c33a8"
     },
     "google-gemini": {
-      "url": "https://raw.githubusercontent.com/v2fly/domain-list-community/777d056afe68b2643c1ef15f80e7bde3dfa149b1/data/google-gemini",
+      "url": "https://raw.githubusercontent.com/v2fly/domain-list-community/cc8b8a5ec9cd60abeefa1da403335db176458c99/data/google-gemini",
       "sha256": "30aff080b1a90df95d5cb2bbd32884b5d21f6231631f6ed869919d4fb073e4a6"
     },
     "groq": {
-      "url": "https://raw.githubusercontent.com/v2fly/domain-list-community/777d056afe68b2643c1ef15f80e7bde3dfa149b1/data/groq",
+      "url": "https://raw.githubusercontent.com/v2fly/domain-list-community/cc8b8a5ec9cd60abeefa1da403335db176458c99/data/groq",
       "sha256": "d779541783d4c835ad341a13ae3c3a008bfa3e535b46f79518b92bdef17588bb"
     },
     "openai": {
-      "url": "https://raw.githubusercontent.com/v2fly/domain-list-community/777d056afe68b2643c1ef15f80e7bde3dfa149b1/data/openai",
+      "url": "https://raw.githubusercontent.com/v2fly/domain-list-community/cc8b8a5ec9cd60abeefa1da403335db176458c99/data/openai",
       "sha256": "25d53e9af3e04d926210d6436bd791594ef4b86f2dc3c108510ac8059d76d969"
     },
     "perplexity": {
-      "url": "https://raw.githubusercontent.com/v2fly/domain-list-community/777d056afe68b2643c1ef15f80e7bde3dfa149b1/data/perplexity",
+      "url": "https://raw.githubusercontent.com/v2fly/domain-list-community/cc8b8a5ec9cd60abeefa1da403335db176458c99/data/perplexity",
       "sha256": "570581bad658566cb493207c14ebb55110750071071e089b4c40054b00af3db0"
     },
     "xai": {
-      "url": "https://raw.githubusercontent.com/v2fly/domain-list-community/777d056afe68b2643c1ef15f80e7bde3dfa149b1/data/xai",
+      "url": "https://raw.githubusercontent.com/v2fly/domain-list-community/cc8b8a5ec9cd60abeefa1da403335db176458c99/data/xai",
       "sha256": "4c95fc6465d5f135f5d27935e9b44f6fcc82cfaa0eb6bb4e3232c44c5c581628"
     }
   },
